@@ -21,29 +21,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
         pGPIOHandle->pGPIOx->MODER |= temp; // write the mode value to the MODER register (using bitwise OR operator to set the bits without affecting the other bits)
     } else {
         // interrupt mode
-        if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT) { // check if the interrupt mode is falling edge trigger
-
-            /* FTSR: Stands for Falling Trigger Selection Register. It's a 32-bit register in the EXTI peripheral that controls which GPIO pins 
-            (0-15, since there are 16 pins per port) will trigger an interrupt on a falling edge (when the voltage goes from high to low, e.g., 3.3V to 0V).*/
-
-
-            // configure the falling trigger selection register (FTSR)
-            EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // set the bit corresponding to the pin number in the FTSR register to enable falling edge trigger for the specified pin
-            EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clear the bit corresponding to the pin number in the RTSR register to disable rising edge trigger for the specified pin
-        } else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT) {
-            // configure the rising trigger selection register (RTSR)
-            EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // set the bit corresponding to the pin number in the RTSR register to enable rising edge trigger for the specified pin
-            EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clear the bit corresponding to the pin number in the FTSR register to disable falling edge trigger for the specified pin
-        } else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT) {
-            // configure both rising and falling trigger selection registers (RTSR and FTSR)
-            EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // set the bit corresponding to the pin number in the RTSR register to enable rising edge trigger for the specified pin
-            EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // set the bit corresponding to the pin number in the FTSR register to enable falling edge trigger for the specified pin
-        }
-
-        // configure the GPIO port selection in SYSCFG_EXTICR
-
-        // enable the EXTI interrupt delivery using the interrupt mask register (IMR)
-        EXTI->IMR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // set the bit corresponding to the pin number in the IMR register to enable interrupt delivery for the specified pin
+        
 }
 temp = 0;
 
