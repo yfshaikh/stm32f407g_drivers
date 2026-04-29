@@ -144,6 +144,8 @@ typedef struct {
 
 #define EXTI ((EXTI_RegDef_t *) EXTI_BASEADDR)
 
+#define SYSCFG ((SYSCFG_RegDef_t *) SYSCFG_BASEADDR)
+
 // clock enable macros for GPIO peripherals
 /*
  * RCC->AHB1ENR is the register that controls the clock for the peripherals hanging on AHB1 bus, so we need to set the specific bit in this register to enable the clock for a specific peripheral
@@ -221,6 +223,16 @@ typedef struct {
 #define GPIOI_REG_RESET() do { (RCC->AHB1RSTR |= (1 << 8)); (RCC->AHB1RSTR &= ~(1 << 8)); } while(0) // reset GPIOI peripheral by setting the 8th bit of AHB1RSTR register and then clearing it
 
 
+// return port code for given GPIO base address, this will be used in SYSCFG_EXTICR register configuration
+#define GPIO_BASEADDR_TO_CODE(x) ((x == GPIOA) ? 0 : \
+                                  (x == GPIOB) ? 1 : \
+                                  (x == GPIOC) ? 2 : \
+                                  (x == GPIOD) ? 3 : \
+                                  (x == GPIOE) ? 4 : \
+                                  (x == GPIOF) ? 5 : \
+                                  (x == GPIOG) ? 6 : \
+                                  (x == GPIOH) ? 7 : \
+                                  (x == GPIOI) ? 8 : 0)
 
 
 

@@ -42,6 +42,12 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
         }
 
         // configure the GPIO port selection in SYSCFG_EXTICR
+        uint8_t SYSCFG_EXTICR_Index = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4; // determine which EXTICR register to use (EXTICR[0] for pins 0-3, EXTICR[1] for pins 4-7, EXTICR[2] for pins 8-11, EXTICR[3] for pins 12-15)
+        uint8_t SYSCFG_EXTICR_PinNumber = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4; // determine the pin number within the EXTICR register (0-3)
+        uint8_t portcode = GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx); // get the port code for the GPIO peripheral (0 for GPIOA, 1 for GPIOB, etc.)
+        SYSCFG_CLOCK_EN(); // enable the clock for SYSCFG peripheral to access the EXTICR registers
+        SYSCFG->EXTICR[SYSCFG_EXTICR_Index] &= ~(0xF << (4 * SYSCFG_EXTICR_PinNumber)); // clear the 4 bits corresponding to the pin number in the EXTICR register
+        SYSCFG->EXTICR[SYSCFG_EXTICR_Index] |= (portcode << (4 * SYSCFG_EXTICR_PinNumber)); // write the port code to the appropriate EXTICR register to select the GPIO port for the specified pin
 
         // enable the EXTI interrupt delivery using the interrupt mask register (IMR)
         EXTI->IMR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // set the bit corresponding to the pin number in the IMR register to enable interrupt delivery for the specified pin
