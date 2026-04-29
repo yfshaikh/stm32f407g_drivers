@@ -118,6 +118,15 @@ typedef struct {
     __vo uint32_t PR; // EXTI Pending register 
 } EXTI_RegDef_t;
 
+// peripheral register definition structure for SYSCFG peripheral
+typedef struct {
+    __vo uint32_t MEMRMP; // SYSCFG memory remap register
+    __vo uint32_t PMC; // SYSCFG peripheral mode configuration register
+    __vo uint32_t EXTICR[4]; // SYSCFG external interrupt configuration registers (EXTICR[0] for EXTI0-3, EXTICR[1] for EXTI4-7, EXTICR[2] for EXTI8-11, EXTICR[3] for EXTI12-15)
+    uint32_t RESERVED1[2]; // reserved space to maintain the memory map, this will be ignored by the compiler
+    __vo uint32_t CMPCR; // SYSCFG Compensation cell control register
+} SYSCFG_RegDef_t;
+
 
 
 // peripheral definitions
